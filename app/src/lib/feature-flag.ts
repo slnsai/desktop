@@ -41,3 +41,8 @@ export function enableNotificationOfBranchUpdates(): boolean {
 export function enableRepoInfoIndicators(): boolean {
   return enableBetaFeatures()
 }
+
+/** Should Desktop use the new troubleshooting flow */
+export function enableSSHTroubleshooting(): boolean {
+  return enableDevelopmentFeatures()
+}
