@@ -89,6 +89,7 @@ import { DeletePullRequest } from './delete-branch/delete-pull-request-dialog'
 import { MergeConflictsWarning } from './merge-conflicts'
 import { AppTheme } from './app-theme'
 import { ApplicationTheme } from './lib/application-theme'
+import { RepositoryStateManager } from '../lib/stores/repository-state-manager'
 
 const MinuteInMilliseconds = 1000 * 60
 
@@ -102,6 +103,7 @@ const UpdateRepositoryIndicatorInterval = 15 * MinuteInMilliseconds
 
 interface IAppProps {
   readonly dispatcher: Dispatcher
+  readonly repositoryStateManager: RepositoryStateManager
   readonly appStore: AppStore
   readonly startTime: number
 }
@@ -1042,7 +1044,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         )
       case PopupType.MergeBranch: {
         const { repository, branch } = popup
-        const state = this.props.appStore.getRepositoryState(repository)
+        const state = this.props.repositoryStateManager.get(repository)
 
         const tip = state.branchesState.tip
         const currentBranch = tip.kind === TipState.Valid ? tip.branch : null
@@ -1063,7 +1065,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       }
       case PopupType.RepositorySettings: {
         const repository = popup.repository
-        const state = this.props.appStore.getRepositoryState(repository)
+        const state = this.props.repositoryStateManager.get(repository)
 
         return (
           <RepositorySettings
@@ -1116,7 +1118,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           />
         )
       case PopupType.CreateBranch: {
-        const state = this.props.appStore.getRepositoryState(popup.repository)
+        const state = this.props.repositoryStateManager.get(popup.repository)
         const branchesState = state.branchesState
         const repository = popup.repository
 
